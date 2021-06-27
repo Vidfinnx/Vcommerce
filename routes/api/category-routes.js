@@ -60,16 +60,20 @@ router.post('/', (req, res) => {
   console.log("\n----------------------");
   console.log("Request Made by " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
-  console.log("-------New Category Name: " + req.body.category_name + "------");
+  // console.log("-------New Category Name: " + req.body.category_name + "ID: " + categoryData.dataValues.id);
   // create a new category
   Category.create({
     category_name: req.body.category_name
   })
-    .then(categoryData => res.json(categoryData))
+    .then(categoryData => {
+      console.log("-------New Category Name: " + req.body.category_name + "  ID: " + categoryData.dataValues.id + "-------");
+      res.json(categoryData)
+    })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
     });
+    
 });
 
 router.put('/:id', (req, res) => {
@@ -85,15 +89,17 @@ router.put('/:id', (req, res) => {
     {
       where: {
         id: req.params.id
-      }
+      },
     })
-    .then(categoryData => {
-      if (categoryData) {
-        console.log('******** ERROR NOT UPDATED No Category found with ID:' + req.params.id + `********`);
-        res.status(404).json({ message: '**ERROR NOT UPDATED** No Category found with ID:' + req.params.id });
+    .then(categoryData => { 
+      let affectedrow = categoryData[0]
+      if (affectedrow === 0 ) {
+        console.log('**ERROR NOT UPDATED** No Category found with ID:' + req.params.id + '  Or Name already taken: ' + req.body.category_name );
+        res.status(404).json({ message: '**ERROR NOT UPDATED** No Category found with ID:' + req.params.id + '  Or Name already taken: ' + req.body.category_name });
         return;
       }
-      res.json(categoryData);
+      console.log("***Category Name Updated: " + " ID: " + req.params.id + " New Name: " + req.body.category_name );
+      res.json("Category Name Updated: " + " ID: " + req.params.id + " New Name: " + req.body.category_name + ' Affected Rows:  ' + categoryData);
     })
     .catch(err => {
       console.log(err);
@@ -102,6 +108,9 @@ router.put('/:id', (req, res) => {
 });
 
 router.delete('/:id', (req, res) => {
+  console.log("\n----------------------");
+  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Requested Url:", req.method + " " + req.originalUrl);
   // delete a category by its `id` value
   Category.destroy({
     where: {
@@ -111,9 +120,12 @@ router.delete('/:id', (req, res) => {
     .then(categoryData => {
       if (!categoryData) {
         res.status(404).json({ message: 'No Category found with that ID.' });
-        return;
+        console.log('***No Category Found With that ID: ' + req.params.id)
+        return;}
+        else {
+          console.log("****Category Successfully Deleted With ID: " + req.params.id)
       }
-      res.json(categoryData);
+      res.json("****Category Successfully Deleted With ID: " + req.params.id);
     })
     .catch(err => {
       console.log(err);
