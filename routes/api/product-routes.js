@@ -111,7 +111,7 @@ router.put('/:id', (req, res) => {
   console.log("\n----------------------");
   console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
-  console.log("-------Product Name Updated " + " ID: " + req.params.id + " New Name " + req.body.category_name + "-------");
+  console.log("-------Product Name Updated " + " ID: " + req.params.id + " New Name " + req.body.product_name + "-------");
   // update product data
   Product.update(req.body, {
     where: {
@@ -162,9 +162,13 @@ router.delete('/:id', (req, res) => {
     .then(productData => {
       if (!productData) {
         res.status(404).json({ message: 'No Product found with that ID.' });
+        console.log('***No Product Found With that ID: ' + req.params.id)
         return;
       }
-      res.json(productData);
+      else {
+        console.log("****Product Successfully Deleted With ID: " + req.params.id)
+    }
+    res.json("****Product Successfully Deleted With ID: " + req.params.id);
     })
     .catch(err => {
       console.log(err);
