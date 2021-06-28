@@ -31,7 +31,8 @@
   # Usage
   - To Start Open Terminal and type `node server.js`
   - Open Postman, Start your testing manually or with the premade ***Vcommerce.postman_collection.json*** imported
-  
+  ![Commerce](https://user-images.githubusercontent.com/79023746/123597271-fb444e00-d7a7-11eb-8014-77c91efd3951.gif)
+
     
   # Contribution
   Anyone can contribute
