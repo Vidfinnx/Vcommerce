@@ -5,7 +5,7 @@ const { Category, Product } = require('../../models');
 
 router.get('/', (req, res) => {
   console.log("\n----------------------");
-  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
   console.log("-------All Categories------");
   // find all categories
@@ -27,7 +27,7 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   console.log("\n----------------------");
-  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
   console.log("-------Category By Id: " + req.params.id + "------");
 
@@ -58,9 +58,8 @@ router.get('/:id', (req, res) => {
 
 router.post('/', (req, res) => {
   console.log("\n----------------------");
-  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
-  // console.log("-------New Category Name: " + req.body.category_name + "ID: " + categoryData.dataValues.id);
   // create a new category
   Category.create({
     category_name: req.body.category_name
@@ -79,7 +78,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
   console.log("\n----------------------");
-  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
   console.log("-------Category Name Updated " + " ID: " + req.params.id + " New Name " + req.body.category_name + "-------");
   Category.update(
@@ -109,7 +108,7 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   console.log("\n----------------------");
-  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
   console.log("Requested Url:", req.method + " " + req.originalUrl);
   // delete a category by its `id` value
   Category.destroy({

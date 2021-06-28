@@ -5,6 +5,10 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 
 // get all products
 router.get('/', (req, res) => {
+  console.log("\n----------------------");
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
+  console.log("Requested Url:", req.method + " " + req.originalUrl);
+  console.log("-------All Products------");
   // find all products
   // be sure to include its associated Category and Tag data
   Product.findAll(
@@ -30,6 +34,10 @@ router.get('/', (req, res) => {
 
 // get one product
 router.get('/:id', (req, res) => {
+  console.log("\n----------------------");
+  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Requested Url:", req.method + " " + req.originalUrl);
+  console.log("-------Product By Id: " + req.params.id + "------");
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
   Product.findOne({
@@ -46,7 +54,14 @@ router.get('/:id', (req, res) => {
     }
     ]
   })
-    .then(productData => res.json(productData))
+    .then(productData => {
+      if (!productData) {
+        console.log('********No Product found with ID:' + req.params.id + `********`);
+        res.status(404).json({ message: 'No Product found with ID:' + req.params.id });
+        return;
+      }
+      res.json(productData);
+    })
     .catch(err => {
       console.log(err);
       res.status(500).json(err);
@@ -55,14 +70,9 @@ router.get('/:id', (req, res) => {
 
 // create new product
 router.post('/', (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
+  console.log("\n----------------------");
+  console.log("Request Made by " + req.socket.remoteAddress);
+  console.log("Requested Url:", req.method + " " + req.originalUrl);
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -77,16 +87,31 @@ router.post('/', (req, res) => {
       }
       // if no product tags, just respond
       res.status(200).json(product);
+      console.log("\n***NEW PRODUCT CREATED***")
+      console.log(product.dataValues)
+      console.log("******************")
+      return;
     })
-    .then((productTagIds) => res.status(200).json(productTagIds))
-    .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
-    });
+    .then(productTagIds => {
+      if (productTagIds) {
+        console.log("***NEW PRODUCT TAG IDS***")
+        console.log(productTagIds)
+        console.log("***END NEW PRODUCT TAG IDS***")
+        res.status(200).json(productTagIds)
+        return;
+      }})
+    .catch (err => {
+        console.log(err);
+        res.status(400).json(err);
+      });
 });
 
 // update product
 router.put('/:id', (req, res) => {
+  console.log("\n----------------------");
+  console.log("Request Made by Ip: " + req.socket.remoteAddress);
+  console.log("Requested Url:", req.method + " " + req.originalUrl);
+  console.log("-------Product Name Updated " + " ID: " + req.params.id + " New Name " + req.body.category_name + "-------");
   // update product data
   Product.update(req.body, {
     where: {
